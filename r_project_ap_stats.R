@@ -56,7 +56,7 @@
 
 # Summary Statistics
 # Calculate mean
-
+mean(mtcars$mpg)
 
 # Calculate the standard deviation
 
@@ -69,7 +69,7 @@
 
 # Creating graphs using ggplot
 # Import ggplot2
-library(ggplot2)
+library(tidyverse)
 str(mtcars)
 head(mtcars)
 tail(mtcars)
@@ -186,14 +186,108 @@ data()
 library(Rmisc)
 
 # Assuming that the dataset mtcars is a srs of all american vehicles find a confidence
-# interval for the true proportion of vehicles that gets 30 mpg or higher. cl = 90% and 95%
+# Goal to get one third of cars to get at least 30 mpg by 2020. Is there convincing
+# evidence from our sample that we reached this goal?
+# Run a confidence interval for the true proportion of vehicles that gets 30 mpg or higher. 
+# cl = 90% and 95%
+
 mtcars$high_mileage_cars <- ifelse(mtcars$mpg > 30, 1, 0)
-count(mtcars$high_mileage_cars)  
 
-mutate(high_mileage_cars =)
-high_mileage_cars <- mtcars %>%
-  filter(mpg >= 30)
+successes <- sum(mtcars$high_mileage_cars)
+n <- nrow(mtcars)
+n
+prop.test(successes, n, p = 1/3, conf.level = 0.9)
+prop.test(successes, n, p = 1/3)
+# Assuming the the dataset mtcars is a SRS of all vehicles driven in the US, is
+# is there convincing evidence that mpg for cars in the US have improved since 1980?
+# H0: mu = 18.3 versus Ha: mu > 18.3
+t.test(mtcars$mpg, alternative = "greater", mu = 18.3)
 
-prop_hm_cars <- nrow(high_mileage_cars)/nrow(mtcars)
-prop_hm_cars
-CI(mtcars$high_mileage_cars, ci = 0.9)
+# Is there convincing evidence that 4 cylinder cars get better gas mileage than
+# 6 cylinder cars using alpha = 0.05.
+# H0: mu1-mu2=0 versus Ha: mu1-mu2>0
+four_cyl <- as.data.frame(mtcars %>%
+  filter(cyl == 4) %>%
+    select(mpg))
+four_cyl
+
+six_cyl <- as.data.frame(mtcars %>%
+  filter(cyl == 6) %>%
+  select(mpg))
+six_cyl
+
+mtcars <- rbind(four_cyl, six_cyl)
+head(mtcars)
+t.test(four_cyl, six_cyl, alternative = 'greater', mu = 0)
+
+# We rejected H0. Calculate 90% and 95% CI for the difference.
+t.test(four_cyl, six_cyl, alternative = 'two.sided', conf.level = 0.9)
+t.test(four_cyl, six_cyl, alternative = 'two.sided', conf.level = 0.95)
+
+# Chi square GOF
+# A small coffee shop sells freshly squeezed juices in a refrigerated unit with 
+#slots where juice is displayed. These slots are called facings. The manager of 
+#the coffee shop suspects that the distribution of juice sales is different than 
+#the distribution of facings for each type of juice, so the manager records the 
+#sales of each juice over a two-week period. The proportion of facings and the 
+#sales for each type of juice are shown in the given variables. Does the coffee
+# shop owner have sufficient evidence to conclude that the distribution of sales
+# is proportional to the number of facings with alpha = 0.05?
+observed <- c(23, 35, 46, 12, 10, 5)
+expected <- c(0.1875, 0.250, 0.250, 0.125, 0.125, 0.0625)
+
+chisq.test(x = observed, p = expected)
+
+# Chi square to see if there is an association between two categorical variables
+# in a two-way table
+# Is there an association between the number of cylinders in a car and the number
+# of gears in a car
+table(mtcars$cyl, mtcars$gear)
+chisq.test(mtcars$cyl, mtcars$gear)
+
+# Chi square test for homogeneity
+table(gss_cat$race, gss_cat$relig)
+
+# Is there a difference in religion and race with alpha = 0.01?
+chisq.test(gss_cat$race, gss_cat$relig)
+
+# Assignment 3
+# Using the NFL players dataset
+act <- act_district_data_class_2018.xlsx...ACT_District_Data_Class_2018
+act
+# Run one of each inference method (you pick the variables)
+mean(act$Compos, na.rm = TRUE)
+
+# Confidence Interval take random sample of at least 30 from one school district
+# and pick a score (English, Math, Compos, etc.). Select confidence level other than 95% 
+"
+srs_cayuga <- act %>%  # Filtering to only use Cayuga ISD
+  filter(DistName == 'Cayuga ISD')
+
+cayuga_score <- sample(na.omit(srs_cayuga$Compos),30) # Taking a random sample of 30
+cayuga_score
+
+t.test(cayuga_score, mu = 19.94, conf.level = 0.90)
+"
+
+# One sample hypothesis test: using the same variable from before, change the
+# alternative = to either 'greater' or 'less'
+
+# Two sample hypothesis test: pick another school district and take a random sample
+# Compare the two districts with a two sample t-test
+
+# Chi Square GOF
+school <- read.csv('https://drive.google.com/drive/folders/1dWvVaCaUvBPLnxdj2ZAQ9VJAhFSfv3OG')
+# Select SRS from a dfferent school district than previously chosen (n>=30)
+srs_conroe <- school_attendance %>%
+  filter(District == 'CONROE ISD') %>%
+  select(Weekday, Total_Students, Abs)
+srs_conroe <- srs_conroe %>%
+  group_by(Weekday) %>%
+  sample_n(size = 250)
+table(srs_conroe$Weekday)
+obs <- c(mean(act$Math, na.rm = TRUE), mean(act$English, na.rm = TRUE), mean(act$Reading, na.rm = TRUE),
+         mean(act$Science, na.rm = TRUE))
+exp <- c(0.25, 0.25, 0.25, 0.25)
+chisq.test(x = obs, p = exp)
+# Chi Square Two way table (Homogeneity or Independence)
