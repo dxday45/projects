@@ -105,12 +105,12 @@ p + geom_histogram(binwidth = 3, fill = 'blue', color = 'white') +
 # Run a one variable analysis on the variable (5 number summary, mean, and standard deviation)
 
 
-# Import the dataset
+# Import the qb.stats_df dataset
 
-# Run a one variable analysis on the dataset 
+# Run a one variable analysis on each variable of the dataset dataset 
 
 
-# Create 2 different visualizations (dotplot, histogram, or boxplot)
+# Create 2 different visualizations (dotplot, histogram, or boxplot): make it look nice
 
 
 
@@ -252,7 +252,7 @@ table(gss_cat$race, gss_cat$relig)
 chisq.test(gss_cat$race, gss_cat$relig)
 
 # Assignment 3
-# Using the NFL players dataset
+# Using the act dataset
 act <- act_district_data_class_2018.xlsx...ACT_District_Data_Class_2018
 act
 # Run one of each inference method (you pick the variables)
@@ -279,7 +279,7 @@ t.test(cayuga_score, mu = 19.94, conf.level = 0.90)
 # Chi Square GOF
 school <- read.csv('https://drive.google.com/drive/folders/1dWvVaCaUvBPLnxdj2ZAQ9VJAhFSfv3OG')
 # Select SRS from a dfferent school district than previously chosen (n>=30)
-srs_conroe <- school_attendance %>%
+"srs_conroe <- school_attendance %>%
   filter(District == 'CONROE ISD') %>%
   select(Weekday, Total_Students, Abs)
 srs_conroe <- srs_conroe %>%
@@ -289,5 +289,22 @@ table(srs_conroe$Weekday)
 obs <- c(mean(act$Math, na.rm = TRUE), mean(act$English, na.rm = TRUE), mean(act$Reading, na.rm = TRUE),
          mean(act$Science, na.rm = TRUE))
 exp <- c(0.25, 0.25, 0.25, 0.25)
-chisq.test(x = obs, p = exp)
+chisq.test(x = obs, p = exp)"
 # Chi Square Two way table (Homogeneity or Independence)
+# Using mtcars dataset pick 2 of the following variables and run the chi square test
+# cyl, gear, or carb
+
+
+
+# Final Assignment
+# Use the student performance dataset. And construct an inference method of your choosing.
+# One for means (math, reading, and/or writing score)
+# For the large sample condition, even if your sample size is greater than 30,
+# create a graph and improve it aesthetically.
+# You must go through all parts of the State, Plan, Do, Conclude.
+
+
+# Then perform a chi square test (any of the other variables)
+#You must go through all parts of the State, Plan, Do, Conclude.
+# table(school_attendance$'variable', school_attendance$'variable2') to look at observations
+# variable 2 is if you do homogeneity or independence
